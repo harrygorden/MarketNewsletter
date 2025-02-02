@@ -12,6 +12,8 @@ import base64  # Add base64 import for email decoding
 import datetime
 import traceback
 from email.mime.text import MIMEText
+import os
+import logging
 
 # Initialize OpenAI client
 openai_client = OpenAI(
@@ -101,69 +103,95 @@ def get_latest_newsletter_email(sender_email):
         print(f"ERROR: Email retrieval failed: {str(e)}\n{traceback.format_exc()}")
         raise
 
-def analyze_newsletter(email_content):
-    print("DEBUG: Entering analyze_newsletter")
+def chunk_newsletter(newsletter_content):
+    # Implement newsletter chunking logic here
+    pass
+
+def analyze_newsletter_chunk(chunk, is_final=False):
+    # Implement chunk analysis logic here
+    pass
+
+def count_tokens(prompt):
+    # Implement token counting logic here
+    pass
+
+def analyze_newsletter(newsletter_content: str) -> dict:
     try:
-        system_prompt = """You are an analytical assistant processing daily ES futures trading newsletters. Your task is to generate a structured summary in plain text (NO MARKDOWN) using ONLY the content from the provided newsletter. Follow this exact format:
-
----
-**Session Recap & Next Session Plan**  
-[1-3 sentence overview of the prior session's key price action and catalysts]  
-
-[Bullet-point list of the newsletter's main expectations including:  
-- Key directional bias (bull/bear cases)  
-- Critical event triggers (FOMC, earnings, etc)  
-- Major technical thresholds to watch]
-
----
-
-**Key Levels and Significance**  
-[Table-formatted list of ALL mentioned price levels/ranges with their context:  
-| Level/Range | Type | Significance |  
-|-------------|------|--------------|  
-(e.g., 6066-70 | Support | Major breakdown pivot from Jan 20th |)  
-...]
-
----
-
-**Quick Reference Levels**  
-[Numbered list of ALL levels/ranges from newsletter without descriptions, sorted highest to lowest:  
-1. 6370-75  
-2. 6338-6349  
-...]
-
----
-Rules:  
-1. NEVER mention newsletter metadata  
-2. Use exact level numbers from text  
-3. Preserve significance qualifiers  
-4. Exclude historical references unless tied to future planning  
-5. Analyze multi-newsletters independently  
-6. Use ONLY newsletter content  
-7. State "Insufficient guidance" if no clear plan
-8. Do NOT mention your inability to access web pages or your AI language model limitations"""
+        # Create OpenAI client
+        client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
         
-        print(f"DEBUG: System prompt: {system_prompt[:100]}...")
-        print(f"INFO: Analyzing content: {len(email_content)} chars")
+        # Split newsletter into manageable chunks
+        chunks = chunk_newsletter(newsletter_content)
         
-        response = openai_client.chat.completions.create(
-            model="gpt-4o", # Updated model
-            messages=[
-                {"role": "system", "content": system_prompt + " Do not attempt to access external websites. Use only the newsletter email content provided."},
-                {"role": "user", "content": email_content}
-            ],
-            temperature=0.3,
-            max_tokens=2000  # Increased for structured output needs
-        )
+        if len(chunks) == 1:
+            return analyze_newsletter_chunk(chunks[0])
         
-        print(f"DEBUG: OpenAI response ID: {response.id}")
-        return response.choices[0].message.content
+        # Analyze each chunk
+        intermediate_analyses = []
+        for i, chunk in enumerate(chunks):
+            is_final = (i == len(chunks) - 1)
+            result = analyze_newsletter_chunk(chunk, is_final)
+            if result.get('status') == 'error':
+                return result
+            intermediate_analyses.append(result.get('analysis', ''))
         
+        # If we had multiple chunks, combine them with a final analysis
+        if len(intermediate_analyses) > 1:
+            combined_analysis = "\n\n".join(intermediate_analyses)
+            final_prompt = f"""Based on the following combined analyses of the newsletter sections, provide a cohesive final analysis and trading plan:
+
+{combined_analysis}
+
+Please structure the final response in our standard format:
+1. **Key Market Insights**
+2. **Potential Trading Opportunities**
+3. **Risk Factors to Consider**
+4. **Recommended Trading Plan**
+5. **Support and Resistance Levels**"""
+            
+            # Check token count for final analysis
+            final_tokens = count_tokens(final_prompt)
+            logging.info(f"Final analysis prompt tokens: {final_tokens}")
+            
+            if final_tokens > 6000:
+                logging.warning("Final analysis too long, truncating intermediate analyses")
+                shortened_analyses = [analysis[:1500] for analysis in intermediate_analyses]
+                combined_analysis = "\n\n".join(shortened_analyses)
+                final_prompt = f"""Based on the following summarized analyses of the newsletter sections, provide a cohesive final analysis and trading plan:
+
+{combined_analysis}
+
+Please structure the final response in our standard format:
+1. **Key Market Insights**
+2. **Potential Trading Opportunities**
+3. **Risk Factors to Consider**
+4. **Recommended Trading Plan**
+5. **Support and Resistance Levels**"""
+            
+            final_result = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": "You are a professional trading analyst. Synthesize the provided analyses into a cohesive final report."},
+                    {"role": "user", "content": final_prompt}
+                ],
+                temperature=0.7,
+                max_tokens=1000
+            )
+            
+            return {
+                'status': 'success',
+                'analysis': final_result.choices[0].message.content
+            }
+        
+        return {
+            'status': 'success',
+            'analysis': intermediate_analyses[-1]
+        }
     except Exception as e:
-        print(f"ERROR: Analysis failed: {str(e)}\n{traceback.format_exc()}")
-        raise
-    finally:
-        print("DEBUG: Exiting analyze_newsletter")
+        return {
+            'status': 'error',
+            'error': str(e)
+        }
 
 def email_analysis(analysis):
     recipient_email = anvil.secrets.get_secret('recipient_email')
