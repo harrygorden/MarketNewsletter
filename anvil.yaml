@@ -4,16 +4,23 @@ dependencies:
   dep_id: dep_lin1x4oec0ytd
   resolution_hints: {app_id: 4UK6WHQ6UX7AKELK, name: Material 3 Theme, package_name: m3}
   version: {version_tag: v1.2.1}
-name: M3 App 1
+name: Market Newsletter
 native_deps: null
-package_name: M3_App_1
+package_name: Market_Newsletter
 runtime_options:
   client_version: '3'
-  server_spec: {base: python310-minimal}
+  server_spec: {base: python310-standard}
   server_version: python3-full
   version: 3
 services:
 - client_config: {}
-  server_config: {}
+  server_config: {auto_create_missing_columns: true}
   source: /runtime/services/tables.yml
+- client_config: {}
+  server_config: {}
+  source: /runtime/services/anvil/secrets.yml
+- client_config: {}
+  server_config: {enc_delegation_refresh_token: 45q4UcV1mBhLbpblAGGniMVftIBBEEcN4Qj2MkP8wnMC9uMTQyRlYRBp9Wogf6J04mqPeeeAzb/17cWGefzM4t3ScKSfSfc9lFxAFb1sehE/dEh11VRSDZpU3OobfJJn71k+89YUdc6K4sk8imu545YfPwMI0iyhJyd+RC9tWdYRw8+9VF4ep6ZEZJtD9t6Fb8IeMsJ79EpwqlQWi/UzfM31a4vP4L7AnaBoDe8H3C1YnTu2Bb0H1DgtzL6hDewel9H2lYmzHpmjzL23gcYnoeVEas39QxzrQayING8TzxNrC/6bVJ5vr1gwvWbr9Q==}
+  source: /runtime/services/google.yml
 startup_form: Form1
+uplink_visible: true
