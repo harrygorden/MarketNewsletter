@@ -33,7 +33,7 @@ def get_google_credentials():
         token_uri=token_uri,
         client_id=client_id,
         client_secret=client_secret,
-        scopes=['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send']
+        scopes=['https://www.googleapis.com/auth/gmail.readonly']
     )
     
     # Refresh the token if necessary
@@ -42,8 +42,8 @@ def get_google_credentials():
         credentials.refresh(Request())
     
     print(f"DEBUG: Using scopes: {credentials.scopes}")
-    if 'https://www.googleapis.com/auth/gmail.send' not in credentials.scopes:
-        raise ValueError("Missing gmail.send scope in credentials")
+    if 'https://www.googleapis.com/auth/gmail.readonly' not in credentials.scopes:
+        raise ValueError("Missing gmail.readonly scope in credentials")
     
     print("INFO: Google credentials validated")
     return credentials
