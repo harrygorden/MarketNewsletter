@@ -152,7 +152,7 @@ Rules:
         print("DEBUG: Exiting analyze_newsletter")
 
 def email_analysis(analysis):
-    recipient_email = anvil.secrets.get('recipient_email')
+    recipient_email = anvil.secrets.get_secret('recipient_email')
     anvil.google.mail.send(
         from_address="Market Newsletter <noreply@market-newsletter.com>",
         to=[recipient_email],
