@@ -10,6 +10,7 @@ import requests
 import base64  # Add base64 import for email decoding
 import datetime
 import traceback
+from email.mime.text import MIMEText
 
 # Initialize OpenAI client
 openai_client = OpenAI(
@@ -32,7 +33,7 @@ def get_google_credentials():
         token_uri=token_uri,
         client_id=client_id,
         client_secret=client_secret,
-        scopes=['https://www.googleapis.com/auth/gmail.readonly']
+        scopes=['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send']
     )
     
     # Refresh the token if necessary
@@ -153,27 +154,26 @@ Rules:
 
 def email_analysis(analysis):
     recipient_email = anvil.secrets.get_secret('recipient_email')
-    anvil.google.mail.send(
-        from_address="Market Newsletter <noreply@market-newsletter.com>",
-        to=[recipient_email],
-        subject=f"Market Analysis Report - {datetime.datetime.now().strftime('%Y-%m-%d')}",
-        text=f"""
-        Here's your latest market analysis:
-
-        {analysis}
-
-        Best regards,
-        Market Newsletter Team
-        """,
-        html=f"""
-        <h1>Market Analysis Report</h1>
-        <p>Date: {datetime.datetime.now().strftime('%Y-%m-%d')}</p>
-        <div style='background:#f8f9fa; padding:20px; border-radius:8px;'>
-            {analysis}
-        </div>
-        <p>Best regards,<br/>Market Newsletter Team</p>
-        """
-    )
+    
+    credentials = get_google_credentials()
+    service = build('gmail', 'v1', credentials=credentials)
+    
+    message = MIMEText(analysis)
+    message['to'] = recipient_email
+    message['from'] = "Market Newsletter <noreply@market-newsletter.com>"
+    message['subject'] = f"Market Analysis Report - {datetime.datetime.now().strftime('%Y-%m-%d')}"
+    
+    raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
+    
+    try:
+        service.users().messages().send(
+            userId='me',
+            body={'raw': raw}
+        ).execute()
+        print("INFO: Email sent successfully")
+    except Exception as e:
+        print(f"ERROR: Gmail API send failed: {str(e)}")
+        raise
 
 @anvil.server.callable
 def launch_newsletter_analysis():
