@@ -207,6 +207,13 @@ def fetch_and_analyze_newsletter():
             logger.debug(f"Sending request to OpenAI with model {response.model}")
             analysis = response.choices[0].message.content.replace('\n', '\n\n')  # Ensure paragraph spacing
             logger.info(f"Analysis completed in {response.usage.total_tokens} tokens")
+            
+            # Send analysis via email
+            try:
+                email_analysis(analysis)
+            except Exception as e:
+                logger.error(f"Email sending failed: {str(e)}", exc_info=True)
+            
             return True, analysis
             
         except Exception as e:
