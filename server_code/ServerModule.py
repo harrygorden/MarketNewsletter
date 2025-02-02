@@ -149,7 +149,7 @@ Rules:
         response = openai_client.chat.completions.create(
             model="gpt-4o", # Updated model
             messages=[
-                {"role": "system", "content": system_prompt},
+                {"role": "system", "content": system_prompt + " Do not attempt to access external websites. Use only the newsletter email content provided."},
                 {"role": "user", "content": email_content}
             ],
             temperature=0.3,
