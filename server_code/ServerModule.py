@@ -8,6 +8,9 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 import requests
 import base64  # Add base64 import for email decoding
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Initialize OpenAI client
 openai_client = OpenAI(
@@ -16,6 +19,7 @@ openai_client = OpenAI(
 
 def get_google_credentials():
     """Get Google credentials using client ID, secret and refresh token from Anvil secrets"""
+    logger.debug("Retrieving Google credentials")
     client_id = anvil.secrets.get_secret("google_client_id")
     client_secret = anvil.secrets.get_secret("google_client_secret")
     refresh_token = anvil.secrets.get_secret("google_refresh_token")
@@ -34,8 +38,10 @@ def get_google_credentials():
     
     # Refresh the token if necessary
     if not credentials.valid:
+        logger.warning("Refreshing expired Google credentials")
         credentials.refresh(Request())
     
+    logger.info("Google credentials validated")
     return credentials
 
 def get_gmail_service():
@@ -44,7 +50,7 @@ def get_gmail_service():
     return build('gmail', 'v1', credentials=credentials)
 
 def get_latest_newsletter_email(sender_email):
-    """Fetch most recent email from specified sender"""
+    logger.debug(f"Searching for emails from {sender_email}")
     try:
         # Get authenticated Gmail service using our custom credentials
         service = get_gmail_service()
@@ -56,7 +62,9 @@ def get_latest_newsletter_email(sender_email):
             maxResults=1
         ).execute()
         
+        logger.info(f"Found {len(results.get('messages', []))} messages")
         if not results.get('messages'):
+            logger.warning("No unread messages found")
             return None
             
         # Retrieve full message content
@@ -78,11 +86,11 @@ def get_latest_newsletter_email(sender_email):
         return body
         
     except Exception as e:
-        print(f"Email Fetch Error: {str(e)}")  # For logging purposes
-        return None
+        logger.error(f"Email retrieval failed: {str(e)}", exc_info=True)
+        raise
 
 def analyze_newsletter(email_content):
-    """Analyze newsletter content with GPT-4 and return formatted analysis"""
+    logger.debug("Entering analyze_newsletter")
     try:
         system_prompt = """Analyze ES futures newsletter and format response as:
         
@@ -95,6 +103,9 @@ def analyze_newsletter(email_content):
         - Resistance: [Price] (strong)
         ..."""
         
+        logger.debug(f"System prompt: {system_prompt[:100]}...")
+        logger.info(f"Analyzing content: {len(email_content)} chars")
+        
         response = openai_client.chat.completions.create(
             model="gpt-4-1106-preview",  # Using GPT-4 Turbo for 128k context window
             messages=[
@@ -105,31 +116,34 @@ def analyze_newsletter(email_content):
             max_tokens=500
         )
         
+        logger.debug(f"OpenAI response ID: {response.id}")
         return response.choices[0].message.content
         
     except Exception as e:
-        print(f"AI Analysis Error: {str(e)}")  # For logging purposes
-        return "Analysis failed - check error logs"
+        logger.error(f"Analysis failed: {str(e)}", exc_info=True)
+        raise
+    finally:
+        logger.debug("Exiting analyze_newsletter")
 
 @anvil.server.callable
 def fetch_and_analyze_newsletter():
-    """
-    Fetches the latest unread email from the configured sender and analyzes it using OpenAI.
-    Returns a tuple of (success, result/error_message)
-    """
+    logger.debug("Entering fetch_and_analyze_newsletter")
     try:
         # Get sender email from secrets
         sender_email = anvil.secrets.get_secret('sender_email')
+        logger.debug(f"Found email from {sender_email}")
         
         # Fetch the email content
         email_content = get_latest_newsletter_email(sender_email)
         if not email_content:
             return False, "No new unread emails found from the newsletter sender"
             
+        logger.info(f"Processing email with {len(email_content)} characters")
+        
         # Analyze the content with OpenAI
         try:
             response = openai_client.chat.completions.create(
-                model="gpt-4",  # Using GPT-4 for better analysis
+                model="gpt-4-1106-preview",  # Using GPT-4 Turbo for 128k context window
                 messages=[
                     {"role": "system", "content": "You are a financial newsletter analyst. Analyze the following newsletter content and provide key insights, market trends, and important points in a concise summary."},
                     {"role": "user", "content": email_content}
@@ -138,11 +152,17 @@ def fetch_and_analyze_newsletter():
                 max_tokens=500
             )
             
+            logger.debug(f"Sending request to OpenAI with model {response.model}")
             analysis = response.choices[0].message.content
+            logger.info(f"Analysis completed in {response.usage.total_tokens} tokens")
             return True, analysis
             
         except Exception as e:
-            return False, f"OpenAI Analysis Error: {str(e)}"
+            logger.error(f"OpenAI Analysis Error: {str(e)}", exc_info=True)
+            return False, str(e)
             
     except Exception as e:
-        return False, f"Email Processing Error: {str(e)}"
+        logger.error(f"Newsletter analysis failed: {str(e)}", exc_info=True)
+        return False, str(e)
+    finally:
+        logger.debug("Exiting fetch_and_analyze_newsletter")
