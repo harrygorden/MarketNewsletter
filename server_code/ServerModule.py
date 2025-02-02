@@ -77,7 +77,7 @@ def get_latest_newsletter_email(sender_email):
         return body
         
     except Exception as e:
-        anvil.error.report_exception("Email Fetch Error", e)
+        print(f"Email Fetch Error: {str(e)}")  # For logging purposes
         return None
 
 def analyze_newsletter(email_content):
@@ -107,7 +107,7 @@ def analyze_newsletter(email_content):
         return response.choices[0].message.content
         
     except Exception as e:
-        anvil.error.report_exception("AI Analysis Error", e)
+        print(f"AI Analysis Error: {str(e)}")  # For logging purposes
         return "Analysis failed - check error logs"
 
 @anvil.server.callable
