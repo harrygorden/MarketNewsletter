@@ -41,6 +41,10 @@ def get_google_credentials():
         print("WARNING: Refreshing expired Google credentials")
         credentials.refresh(Request())
     
+    print(f"DEBUG: Using scopes: {credentials.scopes}")
+    if 'https://www.googleapis.com/auth/gmail.send' not in credentials.scopes:
+        raise ValueError("Missing gmail.send scope in credentials")
+    
     print("INFO: Google credentials validated")
     return credentials
 
