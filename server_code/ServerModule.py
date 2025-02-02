@@ -92,16 +92,43 @@ def get_latest_newsletter_email(sender_email):
 def analyze_newsletter(email_content):
     logger.debug("Entering analyze_newsletter")
     try:
-        system_prompt = """Analyze ES futures newsletter and format response as:
-        
-        **Market Summary**: [Concise summary of current session]
-        
-        **Next Session Plan**: [Actionable trading plan]
-        
-        **Key Levels**:
-        - Support: [Price] (strong) [if mentioned as strong]
-        - Resistance: [Price] (strong)
-        ..."""
+        system_prompt = """You are an analytical assistant processing daily ES futures trading newsletters. Your task is to generate a structured summary in plain text (NO MARKDOWN) using ONLY the content from the provided newsletter. Follow this exact format:
+
+---
+**Session Recap & Next Session Plan**  
+[1-3 sentence overview of the prior session's key price action and catalysts]  
+
+[Bullet-point list of the newsletter's main expectations including:  
+- Key directional bias (bull/bear cases)  
+- Critical event triggers (FOMC, earnings, etc)  
+- Major technical thresholds to watch]
+
+---
+
+**Key Levels and Significance**  
+[Table-formatted list of ALL mentioned price levels/ranges with their context:  
+| Level/Range | Type | Significance |  
+|-------------|------|--------------|  
+(e.g., 6066-70 | Support | Major breakdown pivot from Jan 20th |)  
+...]  
+
+---
+
+**Quick Reference Levels**  
+[Numbered list of ALL levels/ranges from newsletter without descriptions, sorted highest to lowest:  
+1. 6370-75  
+2. 6338-6349  
+...]  
+
+---
+Rules:  
+1. NEVER mention newsletter metadata  
+2. Use exact level numbers from text  
+3. Preserve significance qualifiers  
+4. Exclude historical references unless tied to future planning  
+5. Analyze multi-newsletters independently  
+6. Use ONLY newsletter content  
+7. State "Insufficient guidance" if no clear plan"""
         
         logger.debug(f"System prompt: {system_prompt[:100]}...")
         logger.info(f"Analyzing content: {len(email_content)} chars")
