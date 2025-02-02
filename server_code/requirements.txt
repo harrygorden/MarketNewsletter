@@ -1,0 +1,5 @@
+anvil-extras==3.5.0
+google-api-python-client==2.123.0
+google-auth-oauthlib==1.2.0
+openai==1.30.1
+python-dotenv==1.0.0
