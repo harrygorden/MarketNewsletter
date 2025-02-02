@@ -12,6 +12,19 @@ runtime_options:
   server_spec: {base: python310-standard}
   server_version: python3-full
   version: 3
+secrets:
+  google_client_id:
+    type: secret
+    value: {JEYPSRQHY3WGCTGA: C/3jkcIL/k775/Pl6gnNNapRidRvp5swwlfdpzF3m07eFBL3OZkC6o15De/JPChLj+ewguFA6kz0B44KKio3uTlu8dIC6wrHvFW0wTKmK78BPQ0YiIx1rmbpDW0P8sKf2MTavhs0xkQFaNh/DpkmcM908LoHmYceSqtGK6MNHbNxuVFdU3xXAtGiGSZ2TSRFhoPTvGjZQZq15gIl+hn7c5WPG2bBbx0=}
+  google_client_secret:
+    type: secret
+    value: {JEYPSRQHY3WGCTGA: xkrgx1GnFTyIYyl7TTvgFHD+1CWByRpv4parnzKItNHfo5x79h2Cc3eMA9zknLUWrBGVd0E6G6IEhJT9Cem8kVBsnVKkC1h9JxxtUZasK5rFI/sGCZhNJ+gdacizRbogSPcwjSdd8/pzRUVQoquNAJPJJhNyWSV1PRbIx/C19+gtxw==}
+  openai_api_key:
+    type: secret
+    value: {JEYPSRQHY3WGCTGA: so0m3Cdpwcfii+59VKOFA9sTf/xv82dg+ys1OBe9ASvsTLUH0z2NV6oVCEB9/PjwWYuIxvnmrvA+1fIwk7HB7uIP+MhKgetWfPLVMCIzwCuOHIUMLhPPs6wZKcD6RCFiyhHPV6OO+lMmRW44hG2gm3HmcEq3BAIYVfWktglta/gan8SwlWRHW7Xmezuf2gIH+Upb5HII1LSGZFw9cXUsP0cU4KKw2/ZNf2vpHmcODTY9UT0vYgkcd07qMqqe5pHC2E/yH8/7zTiONxHRCwgivhH9D+9oGuOYU/odU7Q+x/RIE/+fnVQa9Tm59d90SlcheBu2MNPU2SvNuisTBpKrCcjeNQ==}
+  sender_email:
+    type: secret
+    value: {JEYPSRQHY3WGCTGA: uI+KmjFhqNE956IunpETnzCO0MxQzWKvkAm0hd55sWhc8APj5MV4C+RkD7rnrVt/wJrVi0dyP5Q3YQgG+XuixzZcM7+zxN51UD61j3Mck3NvfbJETN9SKTqRNc/8q/IgfPrKzxbg+GdPsMZY6Q1egaQIyMnoWuzs7+k=}
 services:
 - client_config: {}
   server_config: {auto_create_missing_columns: true}
