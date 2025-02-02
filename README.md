@@ -11,6 +11,7 @@ To set up the local development environment, follow these steps:
    - Create a new project or select an existing one
    - Enable the Gmail API for your project
    - Create OAuth 2.0 credentials (OAuth client ID)
+   - Add "http://localhost:8080/" as an "Authorized redirect URI" in the OAuth consent screen
    - Download the client configuration file
 
 2. **Configure Local Files**
@@ -24,6 +25,10 @@ To set up the local development environment, follow these steps:
 3. **Get Google OAuth Refresh Token**
    - Run the `get_refresh_token.py` script in the `local_tools` directory
    - Follow the browser authentication flow
+   - If no refresh token is generated (shows as "None"):
+     1. Go to [Google Account Permissions](https://myaccount.google.com/permissions)
+     2. Remove access for this application
+     3. Run `get_refresh_token.py` again
    - Save the generated refresh token
    - Add it to your Anvil app's secrets as `google_refresh_token`
 

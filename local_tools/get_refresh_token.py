@@ -13,7 +13,11 @@ def get_refresh_token():
     )
 
     # Run the OAuth flow to get credentials
-    credentials = flow.run_local_server(port=0)
+    credentials = flow.run_local_server(
+        port=8080,
+        access_type='offline',
+        prompt='consent'
+    )
 
     # Print the refresh token
     print("\nYour refresh token is:\n")
