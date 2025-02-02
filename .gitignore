@@ -4,3 +4,4 @@ __pycache__
 .anvil-data
 Uplink_Connect.py
 TrainingMaterial*
+client_secrets.json

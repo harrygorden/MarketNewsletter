@@ -2,6 +2,37 @@
 
 **UNDER DEVELOPMENT:** This app is currently under development. It will fetch a newsletter from your GMail inbox and provide it to AI for analysis. Check back soon to learn more!
 
+## Local Development Setup
+
+To set up the local development environment, follow these steps:
+
+1. **Set up Google Cloud Console**
+   - Go to [Google Cloud Console](https://console.cloud.google.com)
+   - Create a new project or select an existing one
+   - Enable the Gmail API for your project
+   - Create OAuth 2.0 credentials (OAuth client ID)
+   - Download the client configuration file
+
+2. **Configure Local Files**
+   - In the `local_tools` directory:
+     1. Copy `example_client_secrets.json` to `client_secrets.json`
+     2. Replace the contents with your downloaded Google OAuth credentials
+     3. Copy `Example_Uplink_Connect.py` to `Uplink_Connect.py`
+     4. In `Uplink_Connect.py`, replace `server_H5WIGHRGGOH3REFDRWQV42VW-JEYPSRQHY3WGCTGA` with your Anvil server uplink code
+        - You can find this code in your Anvil app settings under "Uplink"
+
+3. **Get Google OAuth Refresh Token**
+   - Run the `get_refresh_token.py` script in the `local_tools` directory
+   - Follow the browser authentication flow
+   - Save the generated refresh token
+   - Add it to your Anvil app's secrets as `google_refresh_token`
+
+4. **Additional Anvil Secrets Required**
+   - `google_client_id`: Your Google OAuth client ID
+   - `google_client_secret`: Your Google OAuth client secret
+   - `sender_email`: Email address of the newsletter sender
+   - `openai_api_key`: Your OpenAI API key
+
 ### Build web apps with nothing but Python.
 
 The app in this repository is built with [Anvil](https://anvil.works?utm_source=github:app_README), the framework for building web apps with nothing but Python. You can clone this app into your own Anvil account to use and modify.
