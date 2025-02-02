@@ -122,7 +122,7 @@ def analyze_newsletter(email_content):
 | Level/Range | Type | Significance |  
 |-------------|------|--------------|  
 (e.g., 6066-70 | Support | Major breakdown pivot from Jan 20th |)  
-...]  
+...]
 
 ---
 
@@ -130,7 +130,7 @@ def analyze_newsletter(email_content):
 [Numbered list of ALL levels/ranges from newsletter without descriptions, sorted highest to lowest:  
 1. 6370-75  
 2. 6338-6349  
-...]  
+...]
 
 ---
 Rules:  
@@ -140,7 +140,8 @@ Rules:
 4. Exclude historical references unless tied to future planning  
 5. Analyze multi-newsletters independently  
 6. Use ONLY newsletter content  
-7. State "Insufficient guidance" if no clear plan"""
+7. State "Insufficient guidance" if no clear plan
+8. Do NOT mention your inability to access web pages or your AI language model limitations"""
         
         print(f"DEBUG: System prompt: {system_prompt[:100]}...")
         print(f"INFO: Analyzing content: {len(email_content)} chars")
