@@ -175,6 +175,11 @@ def email_analysis(analysis):
         """
     )
 
+@anvil.server.callable
+def launch_newsletter_analysis():
+    """Entry point for initiating newsletter analysis background task"""
+    return anvil.server.launch_background_task('fetch_and_analyze_newsletter')
+
 @anvil.server.background_task
 def fetch_and_analyze_newsletter():
     print("DEBUG: Entering fetch_and_analyze_newsletter")
