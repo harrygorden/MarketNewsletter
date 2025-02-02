@@ -147,7 +147,7 @@ Rules:
         print(f"INFO: Analyzing content: {len(email_content)} chars")
         
         response = openai_client.chat.completions.create(
-            model="gpt-4-1106-preview",  # Using GPT-4 Turbo for 128k context window
+            model="gpt-4o", # Updated model
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": email_content}
@@ -211,7 +211,7 @@ def fetch_and_analyze_newsletter():
         
         try:
             response = openai_client.chat.completions.create(
-                model="gpt-4-1106-preview",
+                model="gpt-4o",
                 messages=[
                     {"role": "system", "content": "You are a financial newsletter analyst..."},
                     {"role": "user", "content": email_content}
