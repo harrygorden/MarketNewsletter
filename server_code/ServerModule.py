@@ -4,7 +4,8 @@ import anvil.tables as tables
 from anvil.tables import app_tables
 from googleapiclient.discovery import build
 from openai import OpenAI
-from google.oauth2.credentials import Credentials, RefreshError
+from google.oauth2.credentials import Credentials
+from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
 import requests
 import base64  # Add base64 import for email decoding
