@@ -96,7 +96,7 @@ def analyze_newsletter(email_content):
         ..."""
         
         response = openai_client.chat.completions.create(
-            model="gpt-4-1106-preview",
+            model="gpt-4-1106-preview",  # Using GPT-4 Turbo for 128k context window
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": email_content}
