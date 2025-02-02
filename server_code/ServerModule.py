@@ -9,7 +9,10 @@ import requests
 import base64  # Add base64 import for email decoding
 
 # Initialize OpenAI client
-openai_client = OpenAI(api_key=anvil.secrets.get_secret('openai_api_key'))
+openai_client = OpenAI(
+    api_key=anvil.secrets.get_secret('openai_api_key'),
+    api_version="1.30.1"
+)
 
 def get_google_credentials():
     """Get Google credentials using client ID, secret and refresh token from Anvil secrets"""
