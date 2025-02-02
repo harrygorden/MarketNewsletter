@@ -19,6 +19,9 @@ secrets:
   google_client_secret:
     type: secret
     value: {JEYPSRQHY3WGCTGA: xkrgx1GnFTyIYyl7TTvgFHD+1CWByRpv4parnzKItNHfo5x79h2Cc3eMA9zknLUWrBGVd0E6G6IEhJT9Cem8kVBsnVKkC1h9JxxtUZasK5rFI/sGCZhNJ+gdacizRbogSPcwjSdd8/pzRUVQoquNAJPJJhNyWSV1PRbIx/C19+gtxw==}
+  google_refresh_token:
+    type: secret
+    value: {JEYPSRQHY3WGCTGA: iyYblujGQDYePnyiTWXOVTGjcS4rbwJkgs/lOwf/Q13vwqIRvMhn249rIdpfv5XMxUaV8cC9d24CZYwzQF8VEPvvFmvU8hR0HBgAbz+e9qxOQSC375XxTLXiz4axFyOGoe032THcMLJPugwQAeYBFWk9H5QHPfg0i6eWpYg6gJL/6YR2UBN2Sf0lv9URwCNB/OTYSENgaP8g8iM7AvVDZ+LcaEOrfmElzb/2zx0qhHotkjQWcZXobd+IUCvhwk8CcMBtu/mmZ/4=}
   openai_api_key:
     type: secret
     value: {JEYPSRQHY3WGCTGA: so0m3Cdpwcfii+59VKOFA9sTf/xv82dg+ys1OBe9ASvsTLUH0z2NV6oVCEB9/PjwWYuIxvnmrvA+1fIwk7HB7uIP+MhKgetWfPLVMCIzwCuOHIUMLhPPs6wZKcD6RCFiyhHPV6OO+lMmRW44hG2gm3HmcEq3BAIYVfWktglta/gan8SwlWRHW7Xmezuf2gIH+Upb5HII1LSGZFw9cXUsP0cU4KKw2/ZNf2vpHmcODTY9UT0vYgkcd07qMqqe5pHC2E/yH8/7zTiONxHRCwgivhH9D+9oGuOYU/odU7Q+x/RIE/+fnVQa9Tm59d90SlcheBu2MNPU2SvNuisTBpKrCcjeNQ==}
