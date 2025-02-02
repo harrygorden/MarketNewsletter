@@ -33,7 +33,8 @@ def get_google_credentials():
     
     # Refresh the token if necessary
     if not credentials.valid:
-        credentials.refresh(requests.Request())
+        request = requests.Request()
+        credentials.refresh(requests.Session())
     
     return credentials
 
