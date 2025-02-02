@@ -4,7 +4,7 @@ import anvil.tables as tables
 from anvil.tables import app_tables
 from googleapiclient.discovery import build
 from openai import OpenAI
-from google.oauth2.credentials import Credentials
+from google.oauth2.credentials import Credentials, RefreshError
 from google.auth.transport.requests import Request
 import requests
 import base64  # Add base64 import for email decoding
@@ -39,7 +39,12 @@ def get_google_credentials():
     # Refresh the token if necessary
     if not credentials.valid:
         print("WARNING: Refreshing expired Google credentials")
-        credentials.refresh(Request())
+        if credentials.expired:
+            try:
+                credentials.refresh(Request())
+            except RefreshError as e:
+                print("ERROR: Refreshing credentials failed. Please reauthorize your app to generate a new token with the required scopes:", e)
+                raise
     
     print(f"DEBUG: Using scopes: {credentials.scopes}")
     if 'https://www.googleapis.com/auth/gmail.readonly' not in credentials.scopes:
