@@ -140,7 +140,7 @@ Rules:
                 {"role": "user", "content": email_content}
             ],
             temperature=0.3,
-            max_tokens=500
+            max_tokens=1500  # Increased for structured output needs
         )
         
         logger.debug(f"OpenAI response ID: {response.id}")
