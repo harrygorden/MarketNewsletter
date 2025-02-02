@@ -2,20 +2,49 @@ import anvil.secrets
 import anvil.email
 import anvil.tables as tables
 from anvil.tables import app_tables
-import anvil.google.auth
 from googleapiclient.discovery import build
 from openai import OpenAI
+from google.oauth2.credentials import Credentials
+import requests
 import base64  # Add base64 import for email decoding
 
 # Initialize OpenAI client
 openai_client = OpenAI(api_key=anvil.secrets.get_secret('openai_api_key'))
 
+def get_google_credentials():
+    """Get Google credentials using client ID, secret and refresh token from Anvil secrets"""
+    client_id = anvil.secrets.get_secret("google_client_id")
+    client_secret = anvil.secrets.get_secret("google_client_secret")
+    refresh_token = anvil.secrets.get_secret("google_refresh_token")
+    
+    # Construct credentials using the refresh token
+    token_uri = "https://oauth2.googleapis.com/token"
+    
+    credentials = Credentials(
+        token=None,  # Access token is refreshed automatically
+        refresh_token=refresh_token,
+        token_uri=token_uri,
+        client_id=client_id,
+        client_secret=client_secret,
+        scopes=['https://www.googleapis.com/auth/gmail.readonly']
+    )
+    
+    # Refresh the token if necessary
+    if not credentials.valid:
+        credentials.refresh(requests.Request())
+    
+    return credentials
+
+def get_gmail_service():
+    """Create and return an authenticated Gmail service"""
+    credentials = get_google_credentials()
+    return build('gmail', 'v1', credentials=credentials)
+
 def get_latest_newsletter_email(sender_email):
     """Fetch most recent email from specified sender"""
     try:
-        # Get Google API credentials
-        creds = anvil.secrets.get_secret('gmail_credentials')
-        service = build('gmail', 'v1', credentials=creds)
+        # Get authenticated Gmail service using our custom credentials
+        service = get_gmail_service()
         
         # Search query for unread emails from sender
         results = service.users().messages().list(
