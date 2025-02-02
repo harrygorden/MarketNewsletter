@@ -153,7 +153,7 @@ Rules:
                 {"role": "user", "content": email_content}
             ],
             temperature=0.3,
-            max_tokens=1500  # Increased for structured output needs
+            max_tokens=2000  # Increased for structured output needs
         )
         
         print(f"DEBUG: OpenAI response ID: {response.id}")
@@ -217,7 +217,7 @@ def fetch_and_analyze_newsletter():
                     {"role": "user", "content": email_content}
                 ],
                 temperature=0.7,
-                max_tokens=500
+                max_tokens=2000
             )
             analysis = response.choices[0].message.content.replace('\n', '\n\n')
             print(f"INFO: Analysis completed in {response.usage.total_tokens} tokens")
