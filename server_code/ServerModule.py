@@ -9,6 +9,7 @@ from google.auth.transport.requests import Request
 import requests
 import base64  # Add base64 import for email decoding
 import logging
+import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -151,6 +152,30 @@ Rules:
         raise
     finally:
         logger.debug("Exiting analyze_newsletter")
+
+def email_analysis(analysis):
+    recipient_email = anvil.secrets.get('recipient_email')
+    anvil.google.mail.send(
+        from_address="Market Newsletter <noreply@market-newsletter.com>",
+        to=[recipient_email],
+        subject=f"Market Analysis Report - {datetime.datetime.now().strftime('%Y-%m-%d')}",
+        text=f"""
+        Here's your latest market analysis:
+
+        {analysis}
+
+        Best regards,
+        Market Newsletter Team
+        """,
+        html=f"""
+        <h1>Market Analysis Report</h1>
+        <p>Date: {datetime.datetime.now().strftime('%Y-%m-%d')}</p>
+        <div style='background:#f8f9fa; padding:20px; border-radius:8px;'>
+            {analysis}
+        </div>
+        <p>Best regards,<br/>Market Newsletter Team</p>
+        """
+    )
 
 @anvil.server.callable
 def fetch_and_analyze_newsletter():
