@@ -1,5 +1,7 @@
 # About This [Anvil](https://anvil.works/?utm_source=github:app_README) App
 
+**UNDER DEVELOPMENT:** This app is currently under development. It will fetch a newsletter from your GMail inbox and provide it to AI for analysis. Check back soon to learn more!
+
 ### Build web apps with nothing but Python.
 
 The app in this repository is built with [Anvil](https://anvil.works?utm_source=github:app_README), the framework for building web apps with nothing but Python. You can clone this app into your own Anvil account to use and modify.
@@ -13,7 +15,7 @@ Below, you will find:
 
 ### Cloning the app
 
-Go to the [Anvil Editor](https://anvil.works/build?utm_source=github:app_README) (you might need to sign up for a free account) and click on “Clone from GitHub” (underneath the “Blank App” option):
+Go to the [Anvil Editor](https://anvil.works/build?utm_source=github:app_README) (you might need to sign up for a free account) and click on "Clone from GitHub" (underneath the "Blank App" option):
 
 <img src="https://anvil.works/docs/version-control-new-ide/img/git/clone-from-github.png" alt="Clone from GitHub"/>
 
@@ -50,7 +52,7 @@ That's it - **your app is now online**. Click the link and try it!
 
 ## About Anvil
 
-If you’re new to Anvil, welcome! Anvil is a platform for building full-stack web apps with nothing but Python. No need to wrestle with JS, HTML, CSS, Python, SQL and all their frameworks – just build it all in Python.
+If you're new to Anvil, welcome! Anvil is a platform for building full-stack web apps with nothing but Python. No need to wrestle with JS, HTML, CSS, Python, SQL and all their frameworks – just build it all in Python.
 
 <figure>
 <figcaption><h3>Learn About Anvil In 80 Seconds👇</h3></figcaption>
