@@ -5,6 +5,7 @@ from anvil.tables import app_tables
 from googleapiclient.discovery import build
 from openai import OpenAI
 from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
 import requests
 import base64  # Add base64 import for email decoding
 
@@ -33,8 +34,7 @@ def get_google_credentials():
     
     # Refresh the token if necessary
     if not credentials.valid:
-        request = requests.Request()
-        credentials.refresh(requests.Session())
+        credentials.refresh(Request())
     
     return credentials
 
