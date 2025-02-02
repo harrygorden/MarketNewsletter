@@ -3,9 +3,12 @@ import json
 import os
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send']
 
 def get_refresh_token():
+    # Delete token.json if it exists to ensure a fresh token
+    if os.path.exists('token.json'):
+        os.remove('token.json')
     # Create a flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
     flow = InstalledAppFlow.from_client_secrets_file(
         'client_secrets.json',  # Your OAuth 2.0 client configuration file
