@@ -180,7 +180,7 @@ def fetch_and_analyze_newsletter():
             )
             
             logger.debug(f"Sending request to OpenAI with model {response.model}")
-            analysis = response.choices[0].message.content
+            analysis = response.choices[0].message.content.replace('\n', '\n\n')  # Ensure paragraph spacing
             logger.info(f"Analysis completed in {response.usage.total_tokens} tokens")
             return True, analysis
             
