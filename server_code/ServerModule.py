@@ -226,17 +226,16 @@ def launch_newsletter_analysis():
 
 @anvil.server.background_task
 def fetch_and_analyze_newsletter():
-    try:
-        newsletter = get_newsletter()
-        logging.info('Fetched newsletter successfully.')
-
-        analysis = analyze_email(newsletter)
-        logging.info('Email analysis performed.')
-
-        result = send_analysis(analysis)
-        logging.info('Analysis sent successfully.')
-
-        return result
-    except Exception as e:
-        logging.error('Error in newsletter analysis: ' + str(e))
-        raise
+    """Main background task that orchestrates the newsletter analysis process"""
+    from . import GetNewsletter, EmailAnalysis, SendAnalysis
+    
+    # Get the newsletter content
+    newsletter_content = GetNewsletter.get_newsletter()
+    
+    # Analyze the content
+    analysis_result = EmailAnalysis.analyze_email(newsletter_content)
+    
+    # Send the analysis
+    SendAnalysis.send_analysis(analysis_result)
+    
+    return "Newsletter analysis completed and sent successfully"

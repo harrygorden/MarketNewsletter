@@ -1,5 +1,6 @@
 import os
 import logging
+import anvil.secrets
 
 from openai import OpenAI
 
@@ -19,8 +20,8 @@ def count_tokens(prompt):
 
 def analyze_email(newsletter_content: str) -> dict:
     try:
-        # Create OpenAI client using API key from environment variable
-        client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        # Create OpenAI client using API key from Anvil secrets
+        client = OpenAI(api_key=anvil.secrets.get_secret('openai_api_key'))
 
         # Split newsletter into manageable chunks
         chunks = chunk_newsletter(newsletter_content)
@@ -63,26 +64,27 @@ def analyze_email(newsletter_content: str) -> dict:
 4. **Recommended Trading Plan**
 5. **Support and Resistance Levels**"""
 
-            final_result = client.chat.completions.create(
-                model="gpt-4o",
+            # Make the final API call to combine all analyses
+            response = client.chat.completions.create(
+                model="gpt-4",
                 messages=[
-                    {"role": "system", "content": "You are a professional trading analyst. Synthesize the provided analyses into a cohesive final report."},
+                    {"role": "system", "content": "You are a professional market analyst providing clear, actionable insights."},
                     {"role": "user", "content": final_prompt}
-                ],
-                temperature=0.7,
-                max_tokens=1000
+                ]
             )
-
+            
             return {
                 'status': 'success',
-                'analysis': final_result.choices[0].message.content
+                'analysis': response.choices[0].message.content
             }
-
+            
         return {
             'status': 'success',
             'analysis': intermediate_analyses[-1]
         }
+        
     except Exception as e:
+        logging.error(f"Error in analyze_email: {str(e)}")
         return {
             'status': 'error',
             'error': str(e)

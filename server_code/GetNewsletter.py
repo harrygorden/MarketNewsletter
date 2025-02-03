@@ -1,4 +1,6 @@
 import anvil
+import logging
+
 def get_newsletter():
     """Retrieve newsletter content from the designated source.
     This function should use Anvil secrets for API keys if needed.
@@ -6,7 +8,6 @@ def get_newsletter():
     import anvil.secrets
     import base64
     import traceback
-    import logging
 
     from googleapiclient.discovery import build
     from google.oauth2.credentials import Credentials
@@ -51,45 +52,61 @@ def get_gmail_service():
     return build('gmail', 'v1', credentials=credentials)
 
 
-def get_latest_newsletter_email(sender_email):
-    logging.info(f"DEBUG: Searching for emails from {sender_email}")
+def get_latest_newsletter_email(sender_email=None):
+    """Get the latest newsletter email from Gmail"""
+    if not sender_email:
+        sender_email = anvil.secrets.get_secret('newsletter_sender_email')
+        
+    service = get_gmail_service()
+    
     try:
-        service = get_gmail_service()
-        results = service.users().messages().list(
-            userId='me',
-            q=f"from:{sender_email} is:unread",
-            maxResults=1
-        ).execute()
-
+        # Search for emails from the specified sender
+        query = f'from:{sender_email}'
+        results = service.users().messages().list(userId='me', q=query, maxResults=1).execute()
         messages = results.get('messages', [])
-        logging.info(f"INFO: Found {len(messages)} message(s)")
+
         if not messages:
-            logging.warning("No unread messages found")
-            return None
+            logging.error(f"No emails found from {sender_email}")
+            raise Exception(f"No emails found from {sender_email}")
 
-        msg = service.users().messages().get(
-            userId='me',
-            id=messages[0]['id'],
-            format='full'
-        ).execute()
-
-        payload = msg.get('payload', {})
-        body = ""
-        if 'parts' in payload:
-            for part in payload['parts']:
-                if part.get('mimeType') == 'text/plain':
-                    body_data = part.get('body', {}).get('data', '')
-                    body = base64.urlsafe_b64decode(body_data).decode()
-                    break
-        return body
+        # Get the latest email
+        msg = service.users().messages().get(userId='me', id=messages[0]['id'], format='full').execute()
+        
+        # Get email body
+        if 'payload' not in msg:
+            raise Exception("Email payload not found")
+            
+        payload = msg['payload']
+        parts = payload.get('parts', [])
+        
+        # Try to get HTML content first, fall back to plain text
+        email_body = None
+        for part in parts:
+            if part['mimeType'] == 'text/html':
+                email_body = base64.urlsafe_b64decode(part['body']['data']).decode()
+                break
+            elif part['mimeType'] == 'text/plain':
+                email_body = base64.urlsafe_b64decode(part['body']['data']).decode()
+                
+        if not email_body and 'body' in payload and 'data' in payload['body']:
+            email_body = base64.urlsafe_b64decode(payload['body']['data']).decode()
+            
+        if not email_body:
+            raise Exception("Could not extract email content")
+            
+        return email_body
+        
     except Exception as e:
-        logging.error("ERROR: Email retrieval failed: " + str(e) + "\n" + traceback.format_exc())
+        logging.error(f"Error fetching email: {str(e)}")
         raise
 
 
 def get_newsletter():
-    sender_email = anvil.secrets.get_secret("sender_email")
-    newsletter = get_latest_newsletter_email(sender_email)
-    if not newsletter:
-        raise Exception("No newsletter found")
-    return newsletter
+    """Main function to retrieve newsletter content"""
+    try:
+        newsletter_content = get_latest_newsletter_email()
+        logging.info("Successfully retrieved newsletter content")
+        return newsletter_content
+    except Exception as e:
+        logging.error(f"Error in get_newsletter: {str(e)}")
+        raise
