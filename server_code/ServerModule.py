@@ -14,6 +14,9 @@ import traceback
 from email.mime.text import MIMEText
 import os
 import logging
+from .GetNewsletter import get_newsletter
+from .EmailAnalysis import analyze_email
+from .SendAnalysis import send_analysis
 
 # Initialize OpenAI client
 openai_client = OpenAI(
@@ -219,7 +222,10 @@ def email_analysis(analysis):
 @anvil.server.callable
 def launch_newsletter_analysis():
     """Entry point for initiating newsletter analysis background task"""
-    return anvil.server.launch_background_task('fetch_and_analyze_newsletter')
+    newsletter = get_newsletter()
+    analysis = analyze_email(newsletter)
+    result = send_analysis(analysis)
+    return result
 
 @anvil.server.background_task
 def fetch_and_analyze_newsletter():
