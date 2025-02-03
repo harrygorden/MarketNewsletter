@@ -88,7 +88,7 @@ def get_latest_newsletter_email(sender_email):
 
 
 def get_newsletter():
-    sender_email = anvil.secrets.get_secret("sender_name")
+    sender_email = anvil.secrets.get_secret("newsletter_sender_email")
     newsletter = get_latest_newsletter_email(sender_email)
     if not newsletter:
         raise Exception("No newsletter found")
