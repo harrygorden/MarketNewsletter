@@ -1,15 +1,11 @@
 import anvil
-import logging
-import traceback
-import base64
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
-
 def get_newsletter():
     """Retrieve newsletter content from the designated source.
     This function should use Anvil secrets for API keys if needed.
     """
     import anvil.secrets
+    import base64
+    import traceback
     import logging
 
     from googleapiclient.discovery import build
