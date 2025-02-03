@@ -1,5 +1,6 @@
 import anvil
 import logging
+import traceback
 
 def get_newsletter():
     """Retrieve newsletter content from the designated source.
@@ -7,7 +8,6 @@ def get_newsletter():
     """
     import anvil.secrets
     import base64
-    import traceback
     import logging
 
     from googleapiclient.discovery import build

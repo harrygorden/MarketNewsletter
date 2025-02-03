@@ -108,15 +108,16 @@ def get_latest_newsletter_email(sender_email):
 
 def chunk_newsletter(newsletter_content):
     # Implement newsletter chunking logic here
-    pass
+    return [newsletter_content]
 
 def analyze_newsletter_chunk(chunk, is_final=False):
     # Implement chunk analysis logic here
-    pass
+    analysis_excerpt = chunk[:100] + '...' if len(chunk) > 100 else chunk
+    return {'status': 'success', 'analysis': f'Analysis of chunk: {analysis_excerpt}'}
 
 def count_tokens(prompt):
     # Implement token counting logic here
-    pass
+    return len(prompt.split())
 
 def analyze_newsletter(newsletter_content: str) -> dict:
     try:
