@@ -22,15 +22,15 @@ secrets:
   google_refresh_token:
     type: secret
     value: {JEYPSRQHY3WGCTGA: m7wstY720f0ChXc+vv7jmNnv/MjsQSzsUxOBT5GtGz1y2MiC68+wXq8xrqSLZrrdGCJDT+6KDpFANc1+T9QzBp7Aw+C2g/c2wp3thfL6fm6MVmvwYKKxiKGXiKR04COAQI3GQgOEUt76cSVdZmtZdy8tRNuXRKh0UMLLUBmS6q+JR8jnIUukCEiI4AK89L+y4KIhdHWkQ9pIo1D34+tFFRkoCHUcl+0hNFwm7NhQYq79u38VuW51I3fq06eAWSF58S7EeWb/jgA=}
+  newsletter_sender_email:
+    type: secret
+    value: {JEYPSRQHY3WGCTGA: uI+KmjFhqNE956IunpETnzCO0MxQzWKvkAm0hd55sWhc8APj5MV4C+RkD7rnrVt/wJrVi0dyP5Q3YQgG+XuixzZcM7+zxN51UD61j3Mck3NvfbJETN9SKTqRNc/8q/IgfPrKzxbg+GdPsMZY6Q1egaQIyMnoWuzs7+k=}
   openai_api_key:
     type: secret
     value: {JEYPSRQHY3WGCTGA: so0m3Cdpwcfii+59VKOFA9sTf/xv82dg+ys1OBe9ASvsTLUH0z2NV6oVCEB9/PjwWYuIxvnmrvA+1fIwk7HB7uIP+MhKgetWfPLVMCIzwCuOHIUMLhPPs6wZKcD6RCFiyhHPV6OO+lMmRW44hG2gm3HmcEq3BAIYVfWktglta/gan8SwlWRHW7Xmezuf2gIH+Upb5HII1LSGZFw9cXUsP0cU4KKw2/ZNf2vpHmcODTY9UT0vYgkcd07qMqqe5pHC2E/yH8/7zTiONxHRCwgivhH9D+9oGuOYU/odU7Q+x/RIE/+fnVQa9Tm59d90SlcheBu2MNPU2SvNuisTBpKrCcjeNQ==}
   recipient_email:
     type: secret
     value: {JEYPSRQHY3WGCTGA: Wc4YbXgO34RXrXY4KLVsbJlBv6dMcyBxMiFaxuKc1X7VhlolQGq1httI5uziJx1uitbv7Iq/csfDKdUwUcytS2Ef1JM80Fu2xwVQ/rKanAACEyWfKcZxlirjOmanajhLpMt95jpPaFcDAwnvrdXkmRdfA28=}
-  sender_email:
-    type: secret
-    value: {JEYPSRQHY3WGCTGA: uI+KmjFhqNE956IunpETnzCO0MxQzWKvkAm0hd55sWhc8APj5MV4C+RkD7rnrVt/wJrVi0dyP5Q3YQgG+XuixzZcM7+zxN51UD61j3Mck3NvfbJETN9SKTqRNc/8q/IgfPrKzxbg+GdPsMZY6Q1egaQIyMnoWuzs7+k=}
 services:
 - client_config: {}
   server_config: {auto_create_missing_columns: true}

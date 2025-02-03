@@ -6,4 +6,7 @@ unique_ids:
   modules: {}
   scripts: {}
   server_modules:
+    EmailAnalysis: GJD2GTJOV3X63YRTYTHCWTWDSBRVBZ44
+    GetNewsletter: 23AO3MNR4YL2NQV4BCNQH5BL5IJ45J3F
+    SendAnalysis: 2UKMEDSVNG23EOWTJ3OJKPWAYWGD62D6
     ServerModule: MLEBAKHWD25WEQZO47UBRW4W7NIZLKU3
