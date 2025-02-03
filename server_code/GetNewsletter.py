@@ -1,6 +1,7 @@
 import anvil
 import logging
 import traceback
+from google.oauth2.credentials import Credentials
 
 def get_newsletter():
     """Retrieve newsletter content from the designated source.
