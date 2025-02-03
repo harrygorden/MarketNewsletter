@@ -18,7 +18,7 @@ def send_analysis(analysis):
     service = get_gmail_service()
 
     # Prepare the email message
-    message = MIMEText(analysis)
+    message = MIMEText(analysis['analysis'])
     message['to'] = recipient_email
     message['from'] = "Market Newsletter <noreply@market-newsletter.com>"
     message['subject'] = f"Market Analysis Report - {datetime.datetime.now().strftime('%Y-%m-%d')}"
