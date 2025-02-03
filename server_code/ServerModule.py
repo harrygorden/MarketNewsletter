@@ -222,50 +222,11 @@ def email_analysis(analysis):
 @anvil.server.callable
 def launch_newsletter_analysis():
     """Entry point for initiating newsletter analysis background task"""
+    return anvil.server.launch_background_task('fetch_and_analyze_newsletter')
+
+@anvil.server.background_task
+def fetch_and_analyze_newsletter():
     newsletter = get_newsletter()
     analysis = analyze_email(newsletter)
     result = send_analysis(analysis)
     return result
-
-@anvil.server.background_task
-def fetch_and_analyze_newsletter():
-    print("DEBUG: Entering fetch_and_analyze_newsletter")
-    try:
-        # Get sender email from secrets
-        sender_email = anvil.secrets.get_secret('sender_email')
-        print(f"DEBUG: Found email from {sender_email}")
-        
-        # Fetch the email content
-        email_content = get_latest_newsletter_email(sender_email)
-        if not email_content:
-            print("INFO: No new unread emails found")
-            return
-            
-        print(f"INFO: Processing email with {len(email_content)} characters")
-        
-        try:
-            response = openai_client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {"role": "system", "content": "You are a financial newsletter analyst..."},
-                    {"role": "user", "content": email_content}
-                ],
-                temperature=0.7,
-                max_tokens=2000
-            )
-            analysis = response.choices[0].message.content.replace('\n', '\n\n')
-            print(f"INFO: Analysis completed in {response.usage.total_tokens} tokens")
-            
-            try:
-                email_analysis(analysis)
-                print("INFO: Successfully sent analysis email")
-            except Exception as e:
-                print(f"ERROR: Email sending failed: {str(e)}\n{traceback.format_exc()}")
-            
-        except Exception as e:
-            print(f"ERROR: OpenAI Analysis Error: {str(e)}\n{traceback.format_exc()}")
-            
-    except Exception as e:
-        print(f"ERROR: Newsletter analysis failed: {str(e)}\n{traceback.format_exc()}")
-    finally:
-        print("DEBUG: Exiting fetch_and_analyze_newsletter")
