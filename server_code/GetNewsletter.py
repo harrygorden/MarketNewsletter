@@ -1,18 +1,18 @@
 import anvil
 import logging
+import anvil.secrets
+import base64
+import traceback
+from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from google.auth.exceptions import RefreshError
 
 def get_newsletter():
     """Retrieve newsletter content from the designated source.
     This function should use Anvil secrets for API keys if needed.
     """
-    import anvil.secrets
-    import base64
-    import traceback
-
-    from googleapiclient.discovery import build
-    from google.oauth2.credentials import Credentials
-    from google.auth.transport.requests import Request
-    from google.auth.exceptions import RefreshError
+    # Removed imports from here
 
 
 def get_google_credentials():
