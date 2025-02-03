@@ -1,7 +1,7 @@
+import logging
 import anvil.secrets
 import base64
 import datetime
-import logging
 
 from email.mime.text import MIMEText
 from googleapiclient.discovery import build
