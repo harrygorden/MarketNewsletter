@@ -5,7 +5,7 @@ import datetime
 
 from email.mime.text import MIMEText
 from googleapiclient.discovery import build
-from .GetNewsletter import get_google_credentials, get_gmail_service
+from .ServerModule import get_google_credentials, get_gmail_service
 
 def send_analysis(analysis):
     """Send the analysis results via email or other means.
@@ -18,7 +18,11 @@ def send_analysis(analysis):
     service = get_gmail_service()
 
     # Prepare the email message
-    message = MIMEText(analysis)
+    if isinstance(analysis, dict):
+        analysis_text = analysis.get('analysis', '')
+    else:
+        analysis_text = analysis
+    message = MIMEText(analysis_text)
     message['to'] = recipient_email
     message['from'] = "Market Newsletter <noreply@market-newsletter.com>"
     message['subject'] = f"Market Analysis Report - {datetime.datetime.now().strftime('%Y-%m-%d')}"
